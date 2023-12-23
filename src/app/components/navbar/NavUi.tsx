@@ -8,8 +8,8 @@ import {
 } from "@material-tailwind/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import ProfileMenu from "../ProfileMenu";
-import { MobileNav } from "./MobileNav";
-import CartIcon from "../CartIcon";
+import { MobileNav } from "../MobileNav";
+import CartIcon from "../CarIcon";
 import { UserCircleIcon, ShoppingBagIcon } from "@heroicons/react/24/outline";
 import useAuth from "@/app/hooks/useAuth";
 
@@ -42,16 +42,19 @@ export default function NavUI({ cartItemsCount }: Props) {
 
   return (
     <>
-      <MaterialNav className="mx-auto max-w-screen-xl px-4 py-2" placeholder="">
+      <MaterialNav
+        className=" mx-auto max-w-screen-xl px-4 py-2"
+        placeholder="{undefined}"
+      >
         <div className="flex items-center justify-between text-blue-gray-900">
           <Link
             href="/"
             className="mr-4 cursor-pointer py-1.5 lg:ml-2 font-semibold"
           >
-            E-SHOP
+            E-shop
           </Link>
 
-          <div className="hidden lg:flex gap-2 items-center">
+          <div className=" hidden lg:flex gap-2 items-center">
             <CartIcon cartItems={cartItemsCount} />
             {loggedIn ? (
               <ProfileMenu menuItems={menuItems} />
@@ -72,15 +75,15 @@ export default function NavUI({ cartItemsCount }: Props) {
             )}
           </div>
 
-          <div className="lg:hidden flex items-center space-x-2">
+          <div className=" lg:hidden flex items-center space-x-2">
             <CartIcon cartItems={cartItemsCount} />
 
             <IconButton
               variant="text"
               color="blue-gray"
               className="lg:hidden"
-                          onClick={() => setOpen(!open)}
-                          placeholder=""
+              onClick={() => setOpen(!open)}
+              placeholder="{undefined}"
             >
               {open ? (
                 <XMarkIcon className="h-6 w-6" strokeWidth={2} />

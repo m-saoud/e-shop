@@ -10,8 +10,8 @@ import {
 import { XMarkIcon, RectangleGroupIcon } from "@heroicons/react/24/outline";
 import { PowerIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
-import { MenuItems } from "@/app/type/index";
 import useAuth from "@/app/hooks/useAuth";
+import { MenuItems } from "@/app/types/index";
 
 interface Props {
   open: boolean;
@@ -24,21 +24,28 @@ export function MobileNav({ open, onClose, menuItems }: Props) {
 
   return (
     <>
-      <Drawer open={open} onClose={onClose} placeholder={""}>
+      <Drawer open={open} onClose={onClose} placeholder="">
         <div className="mb-2 flex items-center justify-between p-4 z-50">
-          <Typography variant="h5" color="blue-gray" placeholder={""}>
-            Next Ecom
+          <Typography variant="h5" color="blue-gray" placeholder="">
+            E-SHOP
           </Typography>
-          <IconButton variant="text" color="blue-gray" onClick={onClose} placeholder={""}>
+          <IconButton
+            variant="text"
+            color="blue-gray"
+            onClick={onClose}
+            placeholder={undefined}
+          >
             <XMarkIcon strokeWidth={2} className="h-5 w-5" />
           </IconButton>
         </div>
-        <List placeholder={""}>
+        <List placeholder={undefined}>
           {menuItems.map(({ href, icon, label }) => {
             return (
               <Link key={href} href={href}>
-                <ListItem onClick={onClose} placeholder={""}>
-                  <ListItemPrefix placeholder={""}>{icon}</ListItemPrefix>
+                <ListItem onClick={onClose} placeholder="">
+                  <ListItemPrefix placeholder={undefined}>
+                    {icon}
+                  </ListItemPrefix>
                   {label}
                 </ListItem>
               </Link>
@@ -47,8 +54,8 @@ export function MobileNav({ open, onClose, menuItems }: Props) {
 
           {isAdmin ? (
             <Link href="/dashboard">
-              <ListItem onClick={onClose} placeholder={""}>
-                <ListItemPrefix placeholder={""}>
+              <ListItem onClick={onClose} placeholder="">
+                <ListItemPrefix placeholder={undefined}>
                   <RectangleGroupIcon className="h-4 w-4" />
                 </ListItemPrefix>
                 Dashboard
@@ -57,8 +64,8 @@ export function MobileNav({ open, onClose, menuItems }: Props) {
           ) : null}
 
           {loggedIn ? (
-            <ListItem placeholder={""}>
-              <ListItemPrefix placeholder={""}>
+            <ListItem placeholder="">
+              <ListItemPrefix placeholder={undefined}>
                 <PowerIcon className="h-5 w-5" />
               </ListItemPrefix>
               Sign Out

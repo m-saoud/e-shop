@@ -14,7 +14,7 @@ import {
   import { useState } from "react";
   import Link from "next/link";
   import useAuth from "@/app/hooks/useAuth";
-  import { MenuItems } from "@/app/type/index";
+  import { MenuItems } from "@/app/types/index";
   
   interface Props {
     menuItems: MenuItems[];
@@ -28,20 +28,17 @@ import {
     return (
       <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
         <MenuHandler>
-          <Button
+          <Button placeholder=""
             variant="text"
             color="blue-gray"
             className="flex items-center gap-1 rounded-full py-0.5 pr-2 pl-0.5 lg:ml-auto"
-            placeholder="xx"
           >
-            <Avatar
+            <Avatar placeholder=""
               variant="circular"
               size="sm"
               alt="candice wu"
               className="border border-blue-500 p-0.5"
               src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
-              placeholder="Avatar"
-
             />
             <ChevronDownIcon
               strokeWidth={2.5}
@@ -58,8 +55,8 @@ import {
               <Link key={href} href={href} className="outline-none">
                 <MenuItem
                   onClick={closeMenu}
-                  className="flex items-center gap-2 rounded"
-                  placeholder="MenuItem"
+                        className="flex items-center gap-2 rounded"
+                        placeholder=""
                 >
                   {icon}
                   <span>{label}</span>
@@ -72,8 +69,8 @@ import {
             <Link href="/dashboard" className="outline-none">
               <MenuItem
                 onClick={closeMenu}
-                className="flex items-center gap-2 rounded"
-                placeholder="MenuItem"
+                            className="flex items-center gap-2 rounded"
+                            placeholder=""
               >
                 <RectangleGroupIcon className="h-4 w-4" />
                 <span>Dashboard</span>
@@ -81,11 +78,10 @@ import {
             </Link>
           ) : null}
   
-          <MenuItem placeholder="{xx}">
+          <MenuItem placeholder="">
             <p className="flex items-center gap-2 rounded">
               <PowerIcon className="h-4 w-4" />
               <span>Sign Out</span>
-              
             </p>
           </MenuItem>
         </MenuList>

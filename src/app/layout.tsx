@@ -1,8 +1,7 @@
-
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import NavUI from "./compements/navbar/NavUI";
+import { Navbar } from "@/app/components/navbar/index";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,15 +12,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  Navbar
 }: {
-    children: React.ReactNode;
-    Navbar:JSX.Element
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <NavUI cartItemsCount={9} />
+        <Navbar />
         {children}
         <h1 className="text-2xl">Footer</h1>
       </body>
