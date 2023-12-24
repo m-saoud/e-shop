@@ -16,7 +16,6 @@ const validationSchema = yup.object().shape({
 });
 
 export default function SignUp() {
-  
   const {
     values,
     handleChange,
@@ -24,6 +23,7 @@ export default function SignUp() {
     handleBlur,
     isSubmitting,
     errors,
+    touched,
   } = useFormik({
     initialValues: { name: "", email: "", password: "" },
     validationSchema,
@@ -31,9 +31,14 @@ export default function SignUp() {
       console.log(values);
     },
   });
-  const formErrors: string[] = Object.entries(errors).map(([key, value]) => {
-    return value;
-  });;
+  const toucheKey = Object.entries(touched).map(([key, value]) => {
+    if (value) return key;
+  });
+  const finalError: [] = [];
+  Object.entries(errors).forEach(([key, value]) => {
+    if (toucheKey.includes(key) && value) finalError.push(value);
+  });
+  const formErrors: string[] = finalError;
   const { name, password, email } = values;
 
   return (
@@ -43,6 +48,7 @@ export default function SignUp() {
         label="Name"
         crossOrigin={undefined}
         onChange={handleChange}
+        onBlur={handleBlur}
         value={name}
       />
       <Input
@@ -50,6 +56,7 @@ export default function SignUp() {
         label="Email"
         crossOrigin={undefined}
         onChange={handleChange}
+        onBlur={handleBlur}
         value={email}
       />
       <Input
@@ -57,6 +64,7 @@ export default function SignUp() {
         label="Password"
         type="password"
         onChange={handleChange}
+        onBlur={handleBlur}
         crossOrigin={undefined}
         placeholder="current-password"
         value={password}
