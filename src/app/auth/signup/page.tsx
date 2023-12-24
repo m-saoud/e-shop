@@ -16,16 +16,24 @@ const validationSchema = yup.object().shape({
 });
 
 export default function SignUp() {
-  const formErrors: string[] = [];
-  const { values, handleChange, handleSubmit, handleBlur, isSubmitting,errors } =
-    useFormik({
-      initialValues: { name: "", email: "", password: "" },
-      validationSchema,
-      onSubmit: (values) => {
-        console.log(values);
-      },
-    });
-console.log(errors)
+  
+  const {
+    values,
+    handleChange,
+    handleSubmit,
+    handleBlur,
+    isSubmitting,
+    errors,
+  } = useFormik({
+    initialValues: { name: "", email: "", password: "" },
+    validationSchema,
+    onSubmit: (values) => {
+      console.log(values);
+    },
+  });
+  const formErrors: string[] = Object.entries(errors).map(([key, value]) => {
+    return value;
+  });;
   const { name, password, email } = values;
 
   return (
