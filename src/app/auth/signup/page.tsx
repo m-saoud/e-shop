@@ -5,10 +5,13 @@ import { Button, Input } from "@material-tailwind/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import { formikhelpr } from "@/app/utilites/formikhelpr";
+import { POST } from "@/app/api/users/route";
+import { ok } from "assert";
 
 const validationSchema = yup.object().shape({
   name: yup.string().required("Name is required!"),
-  email: yup.string().email("Invalied Email").required("Email is required!"),
+  email: yup.string().email("Invalid Email").required("Email is required!"),
   password: yup
     .string()
     .min(8, "The password at least 8 letters")
@@ -28,17 +31,18 @@ export default function SignUp() {
     initialValues: { name: "", email: "", password: "" },
     validationSchema,
     onSubmit: (values) => {
-      console.log(values);
+      fetch("/api/users", {
+        method: "POST",
+        body: JSON.stringify(values),
+      }).then(async (res) => {
+        if (res.ok) {
+          console.log(await res.json());
+        }
+      });
     },
   });
-  const toucheKey = Object.entries(touched).map(([key, value]) => {
-    if (value) return key;
-  });
-  const finalError: [] = [];
-  Object.entries(errors).forEach(([key, value]) => {
-    if (toucheKey.includes(key) && value) finalError.push(value);
-  });
-  const formErrors: string[] = finalError;
+
+  const formErrors: string[] = formikhelpr(touched, errors, values);
   const { name, password, email } = values;
 
   return (
