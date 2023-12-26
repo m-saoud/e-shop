@@ -5,3 +5,9 @@ export interface MenuItems {
   icon: React.JSX.Element;
   label: string;
 }
+
+export interface NewUserReq {
+  name: string,
+  password: string,
+  email:string
+}

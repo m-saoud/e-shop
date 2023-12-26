@@ -21,5 +21,5 @@ const userSchema = new Schema<userDocument>(
   { timestamps: true }
 );
 
-const UserModle = models.User || model("user", userSchema);
-export default UserModle as Model<userDocument>;
+const UserModel = models.User || model("user", userSchema);
+export default UserModel as Model<userDocument>;

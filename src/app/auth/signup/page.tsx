@@ -6,8 +6,7 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { formikhelpr } from "@/app/utilites/formikhelpr";
-import { POST } from "@/app/api/users/route";
-import { ok } from "assert";
+
 
 const validationSchema = yup.object().shape({
   name: yup.string().required("Name is required!"),
@@ -31,12 +30,13 @@ export default function SignUp() {
     initialValues: { name: "", email: "", password: "" },
     validationSchema,
     onSubmit: (values) => {
-      fetch("/api/users", {
+      fetch('/api/users', {
         method: "POST",
         body: JSON.stringify(values),
       }).then(async (res) => {
         if (res.ok) {
-          console.log(await res.json());
+          const result = await res.json()
+          console.log(result);
         }
       });
     },

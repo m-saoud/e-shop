@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 let connection: typeof mongoose;
-const url = "mongodb://127.0.0.1:27017/E-shop";
+const url = "mongodb+srv://engmsaoud2014:EqWMZhQiREBU4V1O@cluster0.hzgrr8w.mongodb.net/e_shope"
 const startDb = async () => {
   try {
     if (!connection) {
