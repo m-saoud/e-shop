@@ -7,7 +7,6 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { formikhelpr } from "@/app/utilites/formikhelpr";
 
-
 const validationSchema = yup.object().shape({
   name: yup.string().required("Name is required!"),
   email: yup.string().email("Invalid Email").required("Email is required!"),
@@ -29,15 +28,18 @@ export default function SignUp() {
   } = useFormik({
     initialValues: { name: "", email: "", password: "" },
     validationSchema,
-    onSubmit: (values) => {
-      fetch('/api/users', {
+    onSubmit: async (values, action) => {
+      action.setSubmitting(true)
+      await fetch("/api/users", {
         method: "POST",
         body: JSON.stringify(values),
       }).then(async (res) => {
         if (res.ok) {
-          const result = await res.json()
+          const result = await res.json();
           console.log(result);
         }
+        action.setSubmitting(false)
+
       });
     },
   });
@@ -75,9 +77,9 @@ export default function SignUp() {
       />
       <Button
         type="submit"
-        disabled={isSubmitting}
         className="w-full bg-blue-600"
-        placeholder={undefined}
+        disabled={isSubmitting}
+        placeholder="submit"
       >
         Sign up
       </Button>

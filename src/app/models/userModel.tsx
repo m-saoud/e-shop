@@ -1,4 +1,6 @@
 import { Document, Model, Schema, model, models } from "mongoose";
+import { Hash } from "crypto";
+import { genSalt, hashSync } from "bcrypt";
 
 interface userDocument extends Document {
   email: string;
@@ -15,11 +17,23 @@ const userSchema = new Schema<userDocument>(
     name: { type: String, required: true, trim: true },
     password: { type: String, required: true },
     role: { type: String, enum: ["admin", "user"], default: "user" },
-    avatar: { type: String, required: true },
+    avatar: { type: Object, url: String, id: String },
     verified: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
 
-const UserModel = models.User || model("user", userSchema);
+userSchema.pre("save", async function (next) {
+  try {
+    if (!this.isModified("password")) {
+      return next();
+    }
+    const salt = await genSalt(10);
+    this.password = hashSync(this.password, salt);
+    next();
+  } catch (error) {
+    throw error;
+  }
+});
+const UserModel = models.User || model("User", userSchema);
 export default UserModel as Model<userDocument>;
