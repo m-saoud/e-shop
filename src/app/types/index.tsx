@@ -7,7 +7,11 @@ export interface MenuItems {
 }
 
 export interface NewUserReq {
-  name: string,
-  password: string,
-  email:string
+  name: string;
+  password: string;
+  email: string;
+}
+export interface EmailVeriReq {
+  userId: string;
+  token: string;
 }

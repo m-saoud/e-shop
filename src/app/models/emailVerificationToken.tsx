@@ -1,16 +1,24 @@
-import { Date, Document, ObjectId,Schema } from "mongoose";
+import { compare, compareSync, genSalt, hash } from "bcrypt";
+import mongoose, {
+  Date,
+  Document,
+  Model,
+  ObjectId,
+  Schema,
+  models,
+} from "mongoose";
 
-interface emailVerificationDoc extends Document {
+interface EmailVerificationDoc extends Document {
   user: ObjectId;
   token: string;
   createdAt: Date;
 }
-const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
-
+interface Method {
+  tokenToCompare(token: string): Promise<boolean>;
+}
 
 // Define the schema
-const emailVerificationSchema = new Schema({
+const emailVerificationSchema = new Schema<EmailVerificationDoc, {}, Method>({
   user: {
     type: Schema.Types.ObjectId,
     ref: "User", // Assuming there's a User model
@@ -23,34 +31,41 @@ const emailVerificationSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now,
+    expires: 60 * 60 * 24,
   },
 });
 
 // Pre-save middleware to hash the token before saving
 emailVerificationSchema.pre("save", async function (next) {
   try {
+    if (!this.isModified("token")) {
+      return next();
+    }
     // Generate a salt
-    const salt = await bcrypt.genSalt(10);
+    const salt = await genSalt(10);
 
     // Hash the token with the salt
-    const hashedToken = await bcrypt.hash(this.token, salt);
+    const hashedToken = await hash(this.token, salt);
 
     // Set the hashed token back to the document
     this.token = hashedToken;
 
     next();
   } catch (error) {
-    next(error);
+    next(error as mongoose.Error);
   }
 });
 
 // Method to compare hashed tokens
-emailVerificationSchema.methods.compareToken = async function (candidateToken) {
+emailVerificationSchema.methods.compareToken = async function (
+  tokenToCompare: string | Buffer
+) {
   try {
     // Use bcrypt's compare method to compare the candidate token with the stored hashed token
-    const isMatch = await bcrypt.compare(candidateToken, this.token);
+    const isMatch = compareSync(tokenToCompare, this.token);
     return isMatch;
   } catch (error) {
+    console.error("Error comparing tokens:", error);
     throw error;
   }
 };
@@ -63,9 +78,12 @@ emailVerificationSchema.methods.isTokenExpired = function () {
 };
 
 // Create the model
-const EmailVerification = mongoose.model(
-  "EmailVerification",
-  emailVerificationSchema
-);
+export const EmailVerificationToken =
+  models.EmailVerificationToken ||
+  mongoose.model("EmailVerificationToken", emailVerificationSchema);
 
-module.exports = EmailVerification;
+export default EmailVerificationToken as Model<
+  EmailVerificationDoc,
+  {},
+  Method
+>;
