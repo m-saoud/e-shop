@@ -1,4 +1,4 @@
-import React from "react";
+import { Anybody } from "next/font/google";
 
 export const formikhelpr = <T extends Object>(
   touched: { [key: string]: boolean },
@@ -9,7 +9,7 @@ export const formikhelpr = <T extends Object>(
     if (value) return key;
   });
   const finalError: [] = [];
-  Object.entries(errors).forEach(([key, value]) => {
+  Object.entries(errors).forEach(([key, value]:any) => {
     if (toucheKey.includes(key) && values) finalError.push(value);
   });
   return finalError;
