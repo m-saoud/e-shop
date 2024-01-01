@@ -37,5 +37,5 @@ export const POST = async (req: Request) => {
     text: "Hello world?", // plain text body
     html: `<b>Hello world?<a href = "${veriUrl}" >this link</a></b>`, // html body
   });
-  return NextResponse.json(newUser);
+  return NextResponse.json({message:'Please check your Email!'})
 };

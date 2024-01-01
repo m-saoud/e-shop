@@ -14,14 +14,14 @@ interface EmailVerificationDoc extends Document {
   createdAt: Date;
 }
 interface Method {
-  tokenToCompare(token: string): Promise<boolean>;
+  compareToken(token: string): Promise<boolean>;
 }
 
 // Define the schema
 const emailVerificationSchema = new Schema<EmailVerificationDoc, {}, Method>({
   user: {
     type: Schema.Types.ObjectId,
-    ref: "User", // Assuming there's a User model
+    ref: "User",
     required: true,
   },
   token: {
@@ -62,7 +62,7 @@ emailVerificationSchema.methods.compareToken = async function (
 ) {
   try {
     // Use bcrypt's compare method to compare the candidate token with the stored hashed token
-    const isMatch = compareSync(tokenToCompare, this.token);
+    const isMatch = compare(tokenToCompare, this.token);
     return isMatch;
   } catch (error) {
     console.error("Error comparing tokens:", error);
@@ -70,12 +70,12 @@ emailVerificationSchema.methods.compareToken = async function (
   }
 };
 
-// Method to check if the token has expired (assuming a 24-hour expiration)
-emailVerificationSchema.methods.isTokenExpired = function () {
-  const twentyFourHoursInMillis = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
-  const now = new Date();
-  return this.createdAt.getTime() + twentyFourHoursInMillis < now.getTime();
-};
+// // Method to check if the token has expired (assuming a 24-hour expiration)
+// emailVerificationSchema.methods.isTokenExpired = function () {
+//   const twentyFourHoursInMillis = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+//   const now = new Date();
+//   return this.createdAt.getTime() + twentyFourHoursInMillis < now.getTime();
+// };
 
 // Create the model
 export const EmailVerificationToken =

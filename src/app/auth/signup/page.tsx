@@ -6,6 +6,7 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { formikhelpr } from "@/app/utilites/formikhelpr";
+import { toast } from "react-toastify";
 
 const validationSchema = yup.object().shape({
   name: yup.string().required("Name is required!"),
@@ -35,8 +36,8 @@ export default function SignUp() {
         body: JSON.stringify(values),
       }).then(async (res) => {
         if (res.ok) {
-          const result = await res.json();
-          console.log(result);
+          const {message} = await res.json() as {message:string};
+          toast.success(message);
         }
         action.setSubmitting(false)
 

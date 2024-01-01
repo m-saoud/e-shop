@@ -11,6 +11,10 @@ export interface NewUserReq {
   password: string;
   email: string;
 }
+export interface SignCredentials {
+  password: string;
+  email: string;
+}
 export interface EmailVeriReq {
   userId: string;
   token: string;

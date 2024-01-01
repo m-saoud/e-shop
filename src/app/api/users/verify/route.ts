@@ -9,7 +9,7 @@ export const POST = async (req: Request) => {
     const { userId, token } = (await req.json()) as EmailVeriReq;
 
     // confirm userId AND TOKEN
-    if (!isValidObjectId(userId) && !token) {
+    if (!isValidObjectId(userId) || !token) {
       return NextResponse.json(
         {
           error: "Invalid Request ! User Id and Token is required!",
@@ -18,19 +18,21 @@ export const POST = async (req: Request) => {
       );
     }
     //confirm verify token
+
     const verifyToken = await EmailVerificationtoken.findOne({ user: userId });
+
     if (!verifyToken) {
       return NextResponse.json(
         {
-          error: "Invalid Token !",
+          error: "Invalid Token!",
         },
         { status: 401 }
       );
     }
 
     //if we found token now to compare it
-    const isMtched = await verifyToken.tokenToCompare(token);
-    if (!isMtched) {
+    const isMatched = await verifyToken.compareToken(token);
+    if (!isMatched) {
       return NextResponse.json(
         {
           error: "Invalid Token !, token doesn't match",
