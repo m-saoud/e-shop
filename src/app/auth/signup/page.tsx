@@ -7,6 +7,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { formikhelpr } from "@/app/utilites/formikhelpr";
 import { toast } from "react-toastify";
+import Link from "next/dist/client/link";
 
 const validationSchema = yup.object().shape({
   name: yup.string().required("Name is required!"),
@@ -30,23 +31,27 @@ export default function SignUp() {
     initialValues: { name: "", email: "", password: "" },
     validationSchema,
     onSubmit: async (values, action) => {
-      action.setSubmitting(true)
+      action.setSubmitting(true);
       await fetch("/api/users", {
         method: "POST",
         body: JSON.stringify(values),
       }).then(async (res) => {
         if (res.ok) {
-          const {message} = await res.json() as {message:string};
+          const { message } = (await res.json()) as { message: string };
           toast.success(message);
         }
-        action.setSubmitting(false)
-
+        action.setSubmitting(false);
       });
     },
   });
 
   const formErrors: string[] = formikhelpr(touched, errors, values);
   const { name, password, email } = values;
+  type valueKeys = keyof typeof values;
+
+  const error = (name: valueKeys) => {
+    return errors[name] && touched[name] ? true : false;
+  };
 
   return (
     <AuthFormContainer title="Create New Account" onSubmit={handleSubmit}>
@@ -57,6 +62,7 @@ export default function SignUp() {
         onChange={handleChange}
         onBlur={handleBlur}
         value={name}
+        error={error('name')}
       />
       <Input
         name="email"
@@ -65,6 +71,8 @@ export default function SignUp() {
         onChange={handleChange}
         onBlur={handleBlur}
         value={email}
+        error={error('email')}
+
       />
       <Input
         name="password"
@@ -75,6 +83,9 @@ export default function SignUp() {
         crossOrigin={undefined}
         placeholder="current-password"
         value={password}
+        error={error('password')}
+
+        
       />
       <Button
         type="submit"
@@ -84,6 +95,10 @@ export default function SignUp() {
       >
         Sign up
       </Button>
+      <div className="flex items-center justify-between ">
+        <Link href="/auth/signin">Sign In</Link>
+        <Link href="/auth/forget-password">Forget password</Link>
+      </div>
       <div className="">
         {formErrors.map((err) => {
           return (

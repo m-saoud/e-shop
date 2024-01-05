@@ -1,28 +1,46 @@
-import NextAuth from "next-auth/next";
-import { NextAuthOptions } from "next-auth";
-import Credentials from "next-auth/providers/credentials";
+import NextAuth from "next-auth";
+import  {NextAuthConfig}  from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { SignCredentials } from "@/app/types";
-import { ifError } from "assert";
 
-const nextAuthConfig: NextAuthOptions = {
+const  AuthConfig: NextAuthConfig = {
   providers: [
     CredentialsProvider({
-      type: "credentials",
-      credentials: {},
+      name: "Credentials",
+      credentials: {
+      },
       async authorize(credentials, req) {
-        const { email, password } = credentials as SignCredentials;
-        //send request to api route where you can sign in
-        // you user and send error or successrespons to this function
-        const { user, error } = await fetch(
-          "http://localhost:3000/api/users/signin",
-          {
-            method: "POST",
-            body: JSON.stringify({ email, password }),
+        try {
+          const { email, password } = credentials as SignCredentials;
+
+          // Validate email and password (add your validation logic here)
+
+          // Send request to the API route for signing in
+          const response = await fetch(
+            "http://localhost:3000/api/users/signin",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ email, password }),
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error("Authentication failed");
           }
-        ).then(async (res) => await res.json());
-        if (error) throw new Error(error);
-        return { id: user.id };
+
+          const { user, error } = await response.json();
+          if (error) {
+            throw new Error(error);
+          }
+
+          return { id: user.id };
+        } catch (error: any) {
+          // Handle errors here, log them, and return an appropriate response
+          throw new Error(`Authentication error: ${error.message}`);
+        }
       },
     }),
   ],
@@ -31,4 +49,4 @@ const nextAuthConfig: NextAuthOptions = {
 export const {
   auth,
   handlers: { GET, POST },
-} = NextAuth(nextAuthConfig);
+} = NextAuth(AuthConfig);

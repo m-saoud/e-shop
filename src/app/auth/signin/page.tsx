@@ -8,6 +8,7 @@ import React from "react";
 import { useFormik } from "formik";
 import Link from "next/link";
 import * as yup from "yup";
+import { signIn } from "next-auth/react";
 
 const validationSchema = yup.object().shape({
   email: yup.string().email("Invalid email").required("Email is required"),
@@ -29,10 +30,14 @@ export default function SignIn() {
   } = useFormik({
     initialValues: { email: "", password: "" },
     validationSchema,
-    onSubmit: async (values, actions) => {},
+    onSubmit: async (values, actions) => {
+      await signIn('credentials', {
+        ...values
+      })
+    },
   });
 
- const errorsToRender = formikhelpr(touched, errors, values);
+  const errorsToRender = formikhelpr(touched, errors, values);
 
   type valueKeys = keyof typeof values;
 
@@ -62,10 +67,17 @@ export default function SignIn() {
         type="password"
         crossOrigin={undefined}
       />
-      <Button type="submit" className="w-full" placeholder={undefined}>
+      <Button
+        type="submit"
+        className="w-full  bg-blue-600"
+        placeholder=" Sign in"
+        // disabled={isSubmitting}
+       
+
+      >
         Sign in
       </Button>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between " >
         <Link href="/auth/signup">Sign up</Link>
         <Link href="/auth/forget-password">Forget password</Link>
       </div>
