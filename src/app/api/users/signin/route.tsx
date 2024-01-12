@@ -4,13 +4,12 @@ import { SignCredentials } from "@/app/types";
 import { NextResponse } from "next/server";
 
 export const POST = async (req: Request) => {
+  await startDb();
   const { email, password } = (await req.json()) as SignCredentials;
   if (!email || !password)
     return NextResponse.json({
       error: "Invaled request ,Email & password missing",
     });
-
-  await startDb();
   const user = await UserModel.findOne({ email });
   if (!user)
     return NextResponse.json({

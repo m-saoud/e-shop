@@ -1,10 +1,7 @@
 import mongoose from "mongoose";
-
-
+import { boolean } from "yup";
 let connection: typeof mongoose;
-const url =
-  `mongodb+srv://engmsaoud2014:EqWMZhQiREBU4V1O@cluster0.hzgrr8w.mongodb.net/e_shope`;
-mongoose.set("bufferCommands", false);
+const url = `mongodb+srv://engmsaoud2014:${process.env.PASSWORD}@cluster0.hzgrr8w.mongodb.net/e_shope`;
 
 const startDb = async () => {
   try {

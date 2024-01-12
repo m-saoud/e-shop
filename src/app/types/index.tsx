@@ -14,6 +14,7 @@ export interface NewUserReq {
 export interface SignCredentials {
   password: string;
   email: string;
+  id?:number
 }
 export interface EmailVeriReq {
   userId: string;
