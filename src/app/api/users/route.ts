@@ -8,11 +8,10 @@ import crypto from "crypto";
 
 export const POST = async (req: Request) => {
   const body = (await req.json()) as NewUserReq;
-  console.log(body);
+
   await startDb();
   const newUser = await UserModel.create({ ...body });
-  console.log(await newUser.comparePssword("12345678"));
-  console.log(await newUser.comparePssword("xxxcccvbnmh"));
+
   const transport = nodemailer.createTransport({
     host: "sandbox.smtp.mailtrap.io",
     port: 2525,
@@ -37,5 +36,5 @@ export const POST = async (req: Request) => {
     text: "Hello world?", // plain text body
     html: `<b>Hello world?<a href = "${veriUrl}" >this link</a></b>`, // html body
   });
-  return NextResponse.json({message:'Please check your Email!'})
+  return NextResponse.json({ message: "Please check your Email!" });
 };
