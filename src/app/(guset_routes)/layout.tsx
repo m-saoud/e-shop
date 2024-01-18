@@ -6,7 +6,6 @@ interface Props {
 }
 export default async function GusetLayout({ children }: Props) {
   const session = await auth();
-  console.log(session)
    if (session) return redirect('/') 
 
   return (

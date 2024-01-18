@@ -31,10 +31,10 @@ export const POST = async (req: Request) => {
   const veriUrl = `http://localhost:3000/verify?token=${token}&userId=${newUser._id}`;
   await transport.sendMail({
     from: '"Fred Foo 👻" <foo@example.com>', // sender address
-    to: "bar@example.com, baz@example.com", // list of receivers
+    to: newUser.email, // list of receivers
     subject: "Hello ✔", // Subject line
     text: "Hello world?", // plain text body
-    html: `<b>Hello world?<a href = "${veriUrl}" >this link</a></b>`, // html body
+    html: `<b>Thank you ..please click in?<a href = "${veriUrl}" >this link</a></b>`, // html body
   });
   return NextResponse.json({ message: "Please check your Email!" });
 };

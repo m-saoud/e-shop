@@ -20,3 +20,7 @@ export interface EmailVeriReq {
   userId: string;
   token: string;
 }
+export interface forgetPasswordReq {
+  email: string;
+
+}

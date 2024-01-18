@@ -21,7 +21,7 @@ interface Method {
 const emailVerificationSchema = new Schema<EmailVerificationDoc, {}, Method>({
   user: {
     type: Schema.Types.ObjectId,
-    ref: "User",
+    ref: "user",
     required: true,
   },
   token: {

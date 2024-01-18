@@ -15,19 +15,21 @@ export const POST = async (req: Request) => {
 
   //find the user 
   const user = await UserModel.findOne({ email });
+  
   //if no user 
   if (!user)
     return NextResponse.json({
       error: "Email or password mismatch",
-    });
+    });  
+  
 //copared the pssword if found user 
   const passwordMtch = await user.comparePssword(password);
   if (!passwordMtch)
     return NextResponse.json({
       error: "Email or password mismatch",
     });
+  
   //return user info
-
   return NextResponse.json({
     user: {
       id: user._id.toString(),
@@ -37,3 +39,5 @@ export const POST = async (req: Request) => {
     },
   });
 };
+ 
+

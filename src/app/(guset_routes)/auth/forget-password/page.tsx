@@ -1,4 +1,3 @@
-
 "use client";
 import React from "react";
 import FormContainer from "@/app/components/AuthFormContainer";
@@ -8,6 +7,7 @@ import * as yup from "yup";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { formikhelpr } from "@/app/utilites/formikhelpr";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 const validationSchema = yup.object().shape({
   email: yup.string().email("Invalid email").required("Email is required"),
@@ -25,10 +25,33 @@ export default function ForgetPassword() {
   } = useFormik({
     initialValues: { email: "" },
     validationSchema,
-    onSubmit: async (values, actions) => {},
+    onSubmit: async (values, actions) => {
+      actions.setSubmitting(true);
+      try {
+        const res = await fetch("/api/users/forget-password", {
+          method: "POST",
+          body: JSON.stringify(values),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const { message, error } = await res.json();
+        if (res.ok) {
+          toast.success(message);
+        } else {
+          toast.error(error || "An error occurred");
+        }
+      } catch (error) {
+        toast.error("An unexpected error occurred");
+      }
+      actions.setSubmitting(false);
+    },
   });
-
-  const errorsToRender = formikhelpr(errors, touched, values);
+  const errorsToRender: string[] = formikhelpr(
+    errors as any,
+    touched as any,
+    values as any
+  );
 
   type valueKeys = keyof typeof values;
 
@@ -38,7 +61,7 @@ export default function ForgetPassword() {
   };
 
   return (
-    <FormContainer title="Create New Account" onSubmit={handleSubmit}>
+    <FormContainer title="Rsest Password" onSubmit={handleSubmit}>
       <Input
         name="email"
         label="Email"
@@ -46,11 +69,17 @@ export default function ForgetPassword() {
         onChange={handleChange}
         onBlur={handleBlur}
         error={error("email")}
+        crossOrigin={undefined}
       />
-      <Button type="submit" className="w-full" disabled={isSubmitting}>
+      <Button
+        type="submit"
+        className="w-full bg-blue-600"
+        disabled={isSubmitting}
+        placeholder="send link"
+      >
         Send Link
       </Button>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between ">
         <Link href="/auth/signin">Sign in</Link>
         <Link href="/auth/signup">Sign up</Link>
       </div>
