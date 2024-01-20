@@ -1,10 +1,11 @@
 import { compare, compareSync, genSalt, hash } from "bcrypt";
-import mongoose, {
+import {
   Date,
   Document,
   Model,
   ObjectId,
   Schema,
+  model,
   models,
 } from "mongoose";
 
@@ -52,7 +53,7 @@ emailVerificationSchema.pre("save", async function (next) {
 
     next();
   } catch (error) {
-    next(error as mongoose.Error);
+    throw error;
   }
 });
 
@@ -80,7 +81,7 @@ emailVerificationSchema.methods.compareToken = async function (
 // Create the model
 export const EmailVerificationToken =
   models.EmailVerificationToken ||
-  mongoose.model("EmailVerificationToken", emailVerificationSchema);
+  model("EmailVerificationToken", emailVerificationSchema);
 
 export default EmailVerificationToken as Model<
   EmailVerificationDoc,

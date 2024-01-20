@@ -48,7 +48,6 @@ export const POST = async (req: Request) => {
         pass: "df939d5783d494",
       },
     });
-
     await transport.sendMail({
       from: '"Fred Foo 👻" <foo@example.com>',
       to: user?.email, // list of receivers

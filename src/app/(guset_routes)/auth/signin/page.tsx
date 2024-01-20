@@ -9,7 +9,7 @@ import * as yup from "yup";
 import { signIn } from "next-auth/react";
 import { toast } from "react-toastify";
 import { useFormik } from "formik";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 // Define validation schema
 const validationSchema = yup.object().shape({
@@ -38,50 +38,33 @@ export default function SignIn() {
     initialValues: { email: "", password: "" },
     validationSchema,
     onSubmit: async (values, action) => {
-      action.setSubmitting(true);
-      
       try {
+        action.setSubmitting(true);
+
         // Validate form fields using Yup
-        await validationSchema.validate(values, { abortEarly: false });
+         await validationSchema.validate(values, { abortEarly: false });
 
         // Sign in using next-auth
 
         const signInResponse = await signIn("credentials", {
           ...values,
+          redirect:false
         });
 
-        if (signInResponse?.error === "CredentialsSignin") {
-          const errorMessageElement = document.getElementById("error-message");
-          if (errorMessageElement) {
-            errorMessageElement.innerHTML = "Email/password mismatch";
-          }
-          toast.error("Email/password mismatch");
-        }
-
         // Handle other errors or successful sign-in
-        if (signInResponse?.error) {
+        if (signInResponse) {
           toast.success("success to sign-in");
           router.replace("/");
         }
 
-        // Handle validation errors
-        await Promise.all(
-          Object.keys(values).map(async (field) => {
-            try {
-              await validationSchema.validateAt(field as keyof typeof values, {
-                [field]: (values as any)[field],
-              });
-            } catch (error) {
-              if (error instanceof yup.ValidationError) {
-                setFieldError(field, error.message);
-                toast.error("Email/.password mismatch");
-              } else {
-                console.error("Unexpected error type:", error);
-                toast.error("Email/.password mismatch");
-              }
-            }
-          })
-        );
+        if (
+          signInResponse?.error === "CredentialsSignin" &&
+          signInResponse?.status === 404
+        ) {
+
+          setFieldError("email", "No user found. Please sign up.");
+          toast.error("Email OR password mismatch");
+        }
       } catch (error) {
         console.error("Error during sign-in:", error);
         toast.error("Error during sign-in");
@@ -123,7 +106,9 @@ export default function SignIn() {
         type="submit"
         className="w-full bg-blue-600"
         placeholder="Sign in"
-        disabled={isSubmitting}
+        disabled={
+          isSubmitting || Object.values(errors).some((error) => error !== "")
+        }
       >
         Sign in
       </Button>
@@ -132,8 +117,8 @@ export default function SignIn() {
         <Link href="/auth/forget-password">Forget password</Link>
       </div>
       <div className="">
-        {Object.values(errors).map((item, index) => (
-          <div key={index} className="space-x-1 flex items-center text-red-500">
+        {Object.values(errors).map((item, _index) => (
+          <div key={item} className="space-x-1 flex items-center text-red-500">
             <XMarkIcon className="w-4 h-4" />
             {item && <p className="text-xs">{item}</p>}
           </div>

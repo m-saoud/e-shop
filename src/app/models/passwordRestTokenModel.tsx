@@ -1,4 +1,4 @@
-import { compare, genSalt, hash } from "bcrypt";
+import { compare, genSalt, hash, hashSync } from "bcrypt";
 import {
   Date,
   Document,
@@ -42,11 +42,15 @@ passwordRestSchema.pre("save", async function (next) {
     if (!this.isModified("token")) {
       return next();
     }
+
     // Generate a salt
     const salt = await genSalt(10);
 
     // Hash the token with the salt
-    this.token = await hash(this.token, salt);
+    const hashedToken = await hash(this.token, salt);
+
+    // Set the hashed token back to the document
+    this.token = hashedToken;
 
     next();
   } catch (error) {
@@ -56,19 +60,19 @@ passwordRestSchema.pre("save", async function (next) {
 
 // Method to compare hashed tokens
 passwordRestSchema.methods.compareToken = async function (
-  tokenToCompare: string | Buffer
+  rawToken: string | Buffer
 ) {
   try {
     // Use bcrypt's compare method to compare the candidate token with the stored hashed token
-    const isMatch = compare(tokenToCompare, this.token);
-    return await isMatch;
+    const isMatch = await compare(rawToken, this.token);
+    return isMatch;
   } catch (error) {
     throw error;
   }
 };
 
 // Create the model
-const PasswordResetTokenModel =
+export const PasswordResetTokenModel =
   models.PasswordRestToken || model("PasswordResetToken", passwordRestSchema);
 
 export default PasswordResetTokenModel as Model<PasswordResetDoc, {}, Method>;

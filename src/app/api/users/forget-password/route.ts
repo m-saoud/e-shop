@@ -15,7 +15,7 @@ export const POST = async (req: Request, res: Response) => {
     await startDb();
     const user: any = await UserModel.findOne({ email });
     if (!user) {
-      return NextResponse.json({ error: "user not found" }, { status: 404 });
+      return NextResponse.json({ error:"user not found" }, { status: 404 });
     }
     //if there is user ..generate token and send link  to gaiven email
     await PasswordResetTokenModel.findOneAndDelete({ user: user._id });
@@ -26,7 +26,7 @@ export const POST = async (req: Request, res: Response) => {
     });
 
     //send link  to gaiven email
-    const restPsswordLink = `${process.env.PASSWORD_RESET_URL}?token=${token}&userId=${user._id}`;
+    const restPsswordLink = `http://localhost:3000/user/reset-password?token=${token}&userId=${user._id}`;
     const transport = nodemailer.createTransport({
       host: "sandbox.smtp.mailtrap.io",
       port: 2525,

@@ -1,7 +1,7 @@
 export const formikhelpr = <T extends Object>(
   touched: { [K in keyof T]?: boolean | undefined },
   errors:T,
-  values: T
+  values: T,
 ): string[] => {
   const toucheKey = Object.entries(touched).map(([key, value]) => {
     if (value) return key;
