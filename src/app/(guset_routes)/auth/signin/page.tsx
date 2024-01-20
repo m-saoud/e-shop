@@ -42,13 +42,12 @@ export default function SignIn() {
         action.setSubmitting(true);
 
         // Validate form fields using Yup
-         await validationSchema.validate(values, { abortEarly: false });
+        await validationSchema.validate(values, { abortEarly: false });
 
         // Sign in using next-auth
 
         const signInResponse = await signIn("credentials", {
           ...values,
-          redirect:false
         });
 
         // Handle other errors or successful sign-in
@@ -61,7 +60,6 @@ export default function SignIn() {
           signInResponse?.error === "CredentialsSignin" &&
           signInResponse?.status === 404
         ) {
-
           setFieldError("email", "No user found. Please sign up.");
           toast.error("Email OR password mismatch");
         }
