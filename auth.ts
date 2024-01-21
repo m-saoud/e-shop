@@ -35,10 +35,22 @@ const AuthConfig: NextAuthConfig = {
     verifyRequest: "/auth/verify-request",
     newUser: null!, // Will disable the new account creation screen
   },
-    callbacks: {
-        session: async ({ session, user }) => {
-           
-      return await Promise.resolve({ ...session, user });
+  callbacks: {
+    async jwt(params) {
+      if (params.user) {
+        params.token.user = params.user;
+      }
+      return params.token;
+    },
+    async session(params) {
+      const user = params.token.user;
+      if (user) {
+        params.token.user = {
+          ...params.session.user,
+          ...user,
+        };
+      }
+      return params.session;
     },
   },
 };

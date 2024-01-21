@@ -8,6 +8,7 @@ import * as yup from "yup";
 import { formikhelpr } from "@/app/utilites/formikhelpr";
 import { toast } from "react-toastify";
 import Link from "next/dist/client/link";
+import { signIn } from "next-auth/react";
 
 const validationSchema = yup.object().shape({
   name: yup.string().required("Name is required!"),
@@ -38,6 +39,7 @@ export default function SignUp() {
       }).then(async (res) => {
         if (res.ok) {
           const { message } = (await res.json()) as { message: string };
+          await signIn("credentials", { email, password });
           toast.success(message);
         }
         action.setSubmitting(false);
@@ -62,7 +64,7 @@ export default function SignUp() {
         onChange={handleChange}
         onBlur={handleBlur}
         value={name}
-        error={error('name')}
+        error={error("name")}
       />
       <Input
         name="email"
@@ -71,8 +73,7 @@ export default function SignUp() {
         onChange={handleChange}
         onBlur={handleBlur}
         value={email}
-        error={error('email')}
-
+        error={error("email")}
       />
       <Input
         name="password"
@@ -83,9 +84,7 @@ export default function SignUp() {
         crossOrigin={undefined}
         placeholder="current-password"
         value={password}
-        error={error('password')}
-
-        
+        error={error("password")}
       />
       <Button
         type="submit"

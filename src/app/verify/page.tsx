@@ -25,11 +25,12 @@ export default function Verify(props: Props) {
       if (res.ok) {
         //succsess message
         toast.success(message);
-        router.replace("/");
+       
       }
       if (!res.ok && error) {
         toast.error(error);
       }
+      router.replace("/");
     });
   }, [router, token, userId]);
 
