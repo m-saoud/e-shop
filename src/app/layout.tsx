@@ -22,7 +22,6 @@ export default function RootLayout({
     <AuthSession>
       <html lang="en">
         <body >
-          <Navbar />
           {children}
           <Notification />
           <h1 className="text-2xl">Footer</h1>

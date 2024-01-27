@@ -3,10 +3,9 @@ import UserModel from "@/app/models/userModel";
 import { forgetPasswordReq } from "@/app/types";
 import { NextResponse } from "next/server";
 import crypto from "crypto";
-import nodemailer from "nodemailer";
 import startDb from "@/app/lib/db";
 
-export const POST = async (req: Request, res: Response) => {
+export const POST = async (req: Request, _res: Response) => {
   try {
     const { email } = (await req.json()) as forgetPasswordReq;
     if (!email) {
@@ -27,20 +26,11 @@ export const POST = async (req: Request, res: Response) => {
 
     //send link  to gaiven email
     const restPsswordLink = `${process.env.PASSWORD_RESET_URL}?token=${token}&userId=${user._id}`;
-    const transport = nodemailer.createTransport({
-      host: "sandbox.smtp.mailtrap.io",
-      port: 2525,
-      
-      auth: {
-        user: "6494749aa1a716",
-        pass: "df939d5783d494",
-      },
-    });
-    await transport.sendMail({
-      from: '"Fred Foo 👻" <foo@example.com>',
-      to: user?.email, // list of receivers
-      subject: "Hello ✔", // Subject line
-      html: `<b>click in <a href="${restPsswordLink}">this link</a> to reset your password </b>`, // html body
+
+    sendEmail({
+      profile: { name: user.name, email: user.email },
+      subject: "forget-password",
+      linkUrl: restPsswordLink,
     });
     return NextResponse.json({ message: "please check your email" });
   } catch (error) {
@@ -50,3 +40,10 @@ export const POST = async (req: Request, res: Response) => {
     );
   }
 };
+function sendEmail(_arg0: {
+  profile: { name: any; email: any };
+  subject: string;
+  linkUrl: string;
+}) {
+  throw new Error("Function not implemented.");
+}

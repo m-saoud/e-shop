@@ -14,7 +14,7 @@ export interface NewUserReq {
 export interface SignCredentials {
   password: string;
   email: string;
-  id?:number
+  id?: number;
 }
 export interface EmailVeriReq {
   userId: string;
@@ -22,5 +22,12 @@ export interface EmailVeriReq {
 }
 export interface forgetPasswordReq {
   email: string;
-
+}
+export interface SessionUserProfile {
+  id: string;
+  email: string;
+  name: string;
+  avatar?: string;
+  role: "user" | "admin";
+  verified: boolean;
 }

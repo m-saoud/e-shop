@@ -40,20 +40,13 @@ export const POST = async (req: Request) => {
     user.password = password;
     await user.save();
     await PasswordResetTokenModel.findByIdAndDelete(resetToken._id);
-    const transport = nodemailer.createTransport({
-      host: "sandbox.smtp.mailtrap.io",
-      port: 2525,
-      auth: {
-        user: "6494749aa1a716",
-        pass: "df939d5783d494",
-      },
+
+    sendEmail({
+      profile: { name:  user.name, email:  user.email },
+      subject: 'password-changed',
     });
-    await transport.sendMail({
-      from: '"Fred Foo 👻" <foo@example.com>',
-      to: user?.email, // list of receivers
-      subject: "Hello ✔", // Subject line
-      html: `<b> Password has been changed </b>`, // html body
-    });
+ 
+   
     return NextResponse.json({ message: "Password has been changed! " });
   } catch (error) {
     return NextResponse.json(
@@ -64,3 +57,7 @@ export const POST = async (req: Request) => {
     );
   }
 };
+function sendEmail(arg0: { profile: { name: string; email: string; }; subject: string; }) {
+  throw new Error("Function not implemented.");
+}
+
