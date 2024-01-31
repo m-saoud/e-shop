@@ -11,10 +11,11 @@ declare module "next-auth" {
 const AuthConfig: NextAuthConfig = {
   providers: [
     CredentialsProvider({
-      name: "credentials",
+      id: "credentials",
+      type: "credentials",
       credentials: {},
 
-      async authorize(credentials: any, req: any): Promise<any | null> {
+      async authorize(credentials: any): Promise<any | null> {
         const { email, password } = credentials as SignCredentials;
 
         // Send request to the API route for signing in
@@ -57,7 +58,7 @@ const AuthConfig: NextAuthConfig = {
           avatar: user.avatar,
           verified: user.verified,
           email: user.email,
-          role:user.role
+          role: user.role,
         };
       }
       return params.session;
@@ -67,6 +68,5 @@ const AuthConfig: NextAuthConfig = {
 
 export const {
   auth,
-  signIn,
   handlers: { GET, POST },
 } = NextAuth(AuthConfig);

@@ -39,7 +39,7 @@
 "use client";
 import React, { useState } from "react";
 import useAuth from "../hooks/useAuth";
-import { toast } from "react-toastify";
+import { Icons, toast } from "react-toastify";
 
 import axios from "axios";
 
@@ -56,6 +56,7 @@ export default function EmailVerificationBanner() {
     setSubmitting(true);
 
     try {
+      // Use template literals for cleaner string interpolation
       const res = await axios.get(`/api/users/verify?userId=${profile?.id}`);
       const { message, error } = res.data;
 
@@ -85,7 +86,10 @@ export default function EmailVerificationBanner() {
 
   return (
     <div className="p-2 text-center bg-blue-gray-50">
-      <span>It looks like you have not verified your email</span>{" "}
+      <span>
+        Hello, {profile?.name || "User"}! 🌟 It looks like you have not verified
+        your email.
+      </span>{" "}
       <button
         disabled={submitting}
         onClick={applyForVerification}

@@ -31,3 +31,14 @@ export interface SessionUserProfile {
   role: "user" | "admin";
   verified: boolean;
 }
+export interface NewProductInfo {
+  title: string;
+  description: string;
+  bulletPoints: string[];
+  mrp: number;
+  salePrice: number;
+  category: string;
+  quantity: number;
+  thumbnail: File | undefined;
+  images: File[]
+}

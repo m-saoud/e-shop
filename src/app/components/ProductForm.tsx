@@ -15,10 +15,11 @@ import React, {
 import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import categories from "@/app/utilites/categories";
 import ImageSelector from "@/app/components/ImageSelector";
+import { NewProductInfo } from "../types";
 
 interface Props {
   initialValue?: InitialValue;
-  onSubmit(values: any): void;
+  onSubmit(values: NewProductInfo): void;
 }
 
 export interface InitialValue {
@@ -153,9 +154,13 @@ export default function ProductForm(props: Props) {
         </div>
 
         <Input
-                  label="Title"
-                  value={productInfo.title}
-                  onChange={({ target }) => setProductInfo({ ...productInfo, title: target.value })} crossOrigin={undefined}        />
+          label="Title"
+          value={productInfo.title}
+          onChange={({ target }) =>
+            setProductInfo({ ...productInfo, title: target.value })
+          }
+          crossOrigin={undefined}
+        />
 
         <Textarea
           className="h-52"
@@ -167,11 +172,13 @@ export default function ProductForm(props: Props) {
         />
 
         <Select
-                  onChange={(category) => {
-                      if (category) setProductInfo({ ...productInfo, category });
-                  } }
-                  value={productInfo.category}
-                  label="Select Category"  placeholder={undefined}        >
+          onChange={(category) => {
+            if (category) setProductInfo({ ...productInfo, category });
+          }}
+          value={productInfo.category}
+          label="Select Category"
+          placeholder={undefined}
+        >
           {categories.map((c) => (
             <Option value={c} key={c}>
               {c}
@@ -184,35 +191,41 @@ export default function ProductForm(props: Props) {
             <h3>Price</h3>
 
             <Input
-                          value={productInfo.mrp}
-                          label="MRP"
-                          onChange={({ target }) => {
-                              const mrp = +target.value;
-                              setProductInfo({ ...productInfo, mrp });
-                          } }
-                          className="mb-4" crossOrigin={undefined}            />
+              value={productInfo.mrp}
+              label="MRP"
+              onChange={({ target }) => {
+                const mrp = +target.value;
+                setProductInfo({ ...productInfo, mrp });
+              }}
+              className="mb-4"
+              crossOrigin={undefined}
+            />
             <Input
-                          value={productInfo.salePrice}
-                          label="Sale Price"
-                          onChange={({ target }) => {
-                              const salePrice = +target.value;
-                              setProductInfo({ ...productInfo, salePrice });
-                          } }
-                          className="mb-4" crossOrigin={undefined}            />
+              value={productInfo.salePrice}
+              label="Sale Price"
+              onChange={({ target }) => {
+                const salePrice = +target.value;
+                setProductInfo({ ...productInfo, salePrice });
+              }}
+              className="mb-4"
+              crossOrigin={undefined}
+            />
           </div>
 
           <div className="space-y-4 flex-1">
             <h3>Stock</h3>
 
             <Input
-                          value={productInfo.quantity}
-                          label="Qty"
-                          onChange={({ target }) => {
-                              const quantity = +target.value;
-                              if (!isNaN(quantity))
-                                  setProductInfo({ ...productInfo, quantity });
-                          } }
-                          className="mb-4" crossOrigin={undefined}            />
+              value={productInfo.quantity}
+              label="Qty"
+              onChange={({ target }) => {
+                const quantity = +target.value;
+                if (!isNaN(quantity))
+                  setProductInfo({ ...productInfo, quantity });
+              }}
+              className="mb-4"
+              crossOrigin={undefined}
+            />
           </div>
         </div>
 
@@ -221,11 +234,15 @@ export default function ProductForm(props: Props) {
           {fields.map((field, index) => (
             <div key={index} className="flex items-center">
               <Input
-                      type="text"
-                      value={field}
-                      label={`Bullet point ${index + 1}`}
-                      onChange={({ target }) => updateBulletPointValue(target.value, index)}
-                      className="mb-4" crossOrigin={undefined}              />
+                type="text"
+                value={field}
+                label={`Bullet point ${index + 1}`}
+                onChange={({ target }) =>
+                  updateBulletPointValue(target.value, index)
+                }
+                className="mb-4"
+                crossOrigin={undefined}
+              />
               {fields.length > 1 ? (
                 <button
                   onClick={() => removeBulletPoint(index)}

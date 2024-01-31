@@ -9,13 +9,12 @@ interface Props {
 export default async function PrivateLayout({ children }: Props) {
   const session = await auth();
   if (!session) return redirect("/auth/signin");
-    return (
+  return (
     <div>
       <div className="max-w-screen-xl mx-auto p-4 xl:p-0">
+        <Navbar />
         <EmailVerficationBanner />
-          {children}
-          <Navbar />
-
+        {children}
       </div>
     </div>
   );
