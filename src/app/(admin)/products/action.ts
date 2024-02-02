@@ -1,4 +1,7 @@
 "use server";
+import startDb from "@/app/lib/db";
+import ProductModel from "@/app/models/prodctModel";
+import { NewProductInfo } from "@/app/types";
 import { v2 as cloudinary } from "cloudinary";
 
 cloudinary.config({
@@ -7,6 +10,9 @@ cloudinary.config({
   api_secret: process.env.CLOUD_API_SECRET,
   secure: true,
 });
+export const getCloudConfig = () => {
+  return { name: process.env.CLOUD_NAME!, key: process.env.CLOUD_API_KEY! };
+};
 
 //generate our cloud signture
 export const getCloudSignture = async () => {
@@ -19,4 +25,13 @@ export const getCloudSignture = async () => {
     secret
   );
   return { timesStamp, signture };
+};
+export const createProduct = async (info: ) => {
+  try {
+    await startDb();
+    await ProductModel.create({ ...info });  
+  } catch (error) {
+    console.log((error as any).message);
+    throw new Error("somthing went wrong ,cant make product");
+  }
 };

@@ -39,6 +39,6 @@ export interface NewProductInfo {
   salePrice: number;
   category: string;
   quantity: number;
-  thumbnail: File | undefined;
+  thumbnail?: File;
   images: File[]
 }

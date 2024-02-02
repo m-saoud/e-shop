@@ -1,8 +1,7 @@
 import mongoose, { Document, Schema } from "mongoose";
 import { number } from "prop-types";
 import categories from "../utilites/categories";
-
-interface ProductDocument extends Document {
+interface product{
   title: string;
   description: string;
   bulletPoints?: string[];
@@ -16,6 +15,9 @@ interface ProductDocument extends Document {
   category: string;
   rating: number;
 
+}
+interface ProductDocument extends Document {
+ 
   sale: number;
 }
 
