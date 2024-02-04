@@ -1,5 +1,4 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { number } from "prop-types";
 import categories from "../utilites/categories";
 
 export interface NewProduct {
@@ -17,48 +16,55 @@ export interface NewProduct {
   rating: number;
 }
 
-interface ProductDocument extends NewProduct {
-  sale: number;
+interface ProductDocument extends NewProduct, Document {
+  computedSale: number; // Adjust the virtual property name
 }
 
 const modelName = "Product";
 
 // Check if the model already exists in mongoose.models
-const existingModel = mongoose.models[modelName];
+const existingModel = mongoose.models[
+  modelName
+] as mongoose.Model<ProductDocument>;
 
-const productSchema = new Schema<ProductDocument>(
-  {
-    title: { type: String, required: true },
-    description: { type: String, required: true },
-    bulletPoints: { type: [String] },
-    thumbnail: {
-      url: { type: String, required: true },
-      id: { type: String, required: true },
-    },
-    images: [
-      {
+let ProductModel: mongoose.Model<ProductDocument>;
+
+// If the model doesn't exist, create it
+if (existingModel) {
+  ProductModel = existingModel;
+} else {
+  const productSchema = new Schema<ProductDocument>(
+    {
+      title: { type: String, required: true },
+      description: { type: String, required: true },
+      bulletPoints: { type: [String] },
+      thumbnail: {
         url: { type: String, required: true },
         id: { type: String, required: true },
       },
-    ],
-    price: {
-      base: { type: Number, required: true },
-      discounted: { type: Number, required: true },
+      images: [
+        {
+          url: { type: String, required: true },
+          id: { type: String, required: true },
+        },
+      ],
+      price: {
+        base: { type: Number, required: true },
+        discounted: { type: Number, required: true },
+      },
+      quantity: { type: Number, required: true },
+      category: { type: String, enum: [...categories], required: true },
+      rating: { type: Number, required: true },
     },
-    quantity: { type: Number, required: true },
-    category: { type: String, enum: [...categories], required: true },
-    rating: { type: Number, required: true },
-  },
-  { timestamps: true }
-);
+    { timestamps: true }
+  );
 
-// Define the virtual property for 'sale'
-productSchema.virtual("sale").get(function (this: ProductDocument) {
-  return this.price.base - this.price.discounted / this.price.base;
-});
+  // Define the virtual property for 'computedSale'
+  productSchema.virtual("computedSale").get(function (this: ProductDocument) {
+    return this.price.base - this.price.discounted / this.price.base;
+  });
 
-// If the model doesn't exist, create it
-export default ProductModel: mongoose.Model<ProductDocument> = existingModel
-  ? existingModel.discriminator(modelName, productSchema)
-  : mongoose.model(modelName, productSchema);
+  ProductModel = mongoose.model<ProductDocument>(modelName, productSchema);
+}
 
+export default ProductModel;

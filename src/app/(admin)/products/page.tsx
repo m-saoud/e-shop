@@ -23,7 +23,7 @@ const fetchingProducts = async (
     return {
       id: product._id.toString(),
       title: product.title,
-      thumbnail: thumbnailUrl,
+      thumbnail: thumbnailUrl.url,
       description: product.description,
       price: {
         mrp: product.price.base,
@@ -37,7 +37,7 @@ const fetchingProducts = async (
 };
 
 export default async function Products() {
-  const products = await fetchingProducts(1, 10);
+  let products = await fetchingProducts(1, 10);
 
   return (
     <div>

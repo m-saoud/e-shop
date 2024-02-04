@@ -1,6 +1,7 @@
 "use server";
 import startDb from "@/app/lib/db";
 import ProductModel, { NewProduct } from "@/app/models/prodctModel";
+import { NewProductInfo } from "@/app/types";
 import { v2 as cloudinary } from "cloudinary";
 
 cloudinary.config({
