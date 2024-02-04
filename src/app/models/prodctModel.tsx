@@ -1,12 +1,13 @@
 import mongoose, { Document, Schema } from "mongoose";
 import { number } from "prop-types";
 import categories from "../utilites/categories";
-interface product{
+
+export interface NewProduct {
   title: string;
   description: string;
   bulletPoints?: string[];
   thumbnail: { url: string; id: string };
-  image?: { url: string; id: string }[];
+  images?: { url: string; id: string }[];
   price: {
     base: number;
     discounted: number;
@@ -14,12 +15,16 @@ interface product{
   quantity: number;
   category: string;
   rating: number;
-
 }
-interface ProductDocument extends Document {
- 
+
+interface ProductDocument extends NewProduct {
   sale: number;
 }
+
+const modelName = "Product";
+
+// Check if the model already exists in mongoose.models
+const existingModel = mongoose.models[modelName];
 
 const productSchema = new Schema<ProductDocument>(
   {
@@ -27,12 +32,10 @@ const productSchema = new Schema<ProductDocument>(
     description: { type: String, required: true },
     bulletPoints: { type: [String] },
     thumbnail: {
-      type: Object,
-      required: true,
       url: { type: String, required: true },
       id: { type: String, required: true },
     },
-    image: [
+    images: [
       {
         url: { type: String, required: true },
         id: { type: String, required: true },
@@ -54,13 +57,8 @@ productSchema.virtual("sale").get(function (this: ProductDocument) {
   return this.price.base - this.price.discounted / this.price.base;
 });
 
-// Check if the model already exists in mongoose.models
-const modelName = "Product";
-const existingModel = mongoose.models[modelName];
-
 // If the model doesn't exist, create it
-const ProductModel = existingModel
+export default ProductModel: mongoose.Model<ProductDocument> = existingModel
   ? existingModel.discriminator(modelName, productSchema)
   : mongoose.model(modelName, productSchema);
 
-export default ProductModel;

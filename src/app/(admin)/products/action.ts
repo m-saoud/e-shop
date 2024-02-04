@@ -1,7 +1,6 @@
 "use server";
 import startDb from "@/app/lib/db";
-import ProductModel from "@/app/models/prodctModel";
-import { NewProductInfo } from "@/app/types";
+import ProductModel, { NewProduct } from "@/app/models/prodctModel";
 import { v2 as cloudinary } from "cloudinary";
 
 cloudinary.config({
@@ -26,10 +25,11 @@ export const getCloudSignture = async () => {
   );
   return { timesStamp, signture };
 };
-export const createProduct = async (info: ) => {
+export const createProduct = async (info: NewProduct) => {
   try {
     await startDb();
-    await ProductModel.create({ ...info });  
+    const newProduct = new ProductModel(info);
+    await newProduct.save();
   } catch (error) {
     console.log((error as any).message);
     throw new Error("somthing went wrong ,cant make product");

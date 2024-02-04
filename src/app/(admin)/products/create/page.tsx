@@ -14,18 +14,23 @@ export default function Create() {
     try {
       await newProductInfoSchema.validate(values, { abortEarly: false });
       const thubmailRes = await upLoadImage(thumbnail!);
-      let productImages :{url:string,id:string}[]
+      let productImages: { url: string; id: string }[] = [];
       if (images) {
-       const uploadPromise =  images.map(async (imageFile) => {
+        const uploadPromise = images.map(async (imageFile) => {
           const { id, url } = await upLoadImage(imageFile);
-          return {url,id}
-       });
-        productImages =  await Promise.all(uploadPromise)
+          return { url, id };
+        });
+        productImages = await Promise.all(uploadPromise);
       }
-      createProduct({
+      await createProduct({
         ...values,
+        price: {
+          base: values.mrp,
+          discounted: values.salePrice,
+        },
         thumbnail: thubmailRes,
-        images:productImages
+        images: productImages,
+        rating: 0,
       });
     } catch (error) {
       if (error instanceof ValidationError) {
