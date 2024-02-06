@@ -128,11 +128,12 @@ export default function ProductForm(props: Props) {
       <h1 className="mb-2 text-xl">Add new product</h1>
 
       <form
-        action={() =>
+        onSubmit={ (event) => {
+          event.preventDefault(); 
           startTransition(async () => {
             await onSubmit({ ...productInfo, images, thumbnail });
-          })
-        }
+          });
+        }}
         className="space-y-6"
       >
         <div className="space-y-4">
