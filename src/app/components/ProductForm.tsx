@@ -128,10 +128,10 @@ export default function ProductForm(props: Props) {
       <h1 className="mb-2 text-xl">Add new product</h1>
 
       <form
-        onSubmit={ (event) => {
-          event.preventDefault(); 
+        onSubmit={(event) => {
+          event.preventDefault();
           startTransition(async () => {
-            await onSubmit({ ...productInfo, images, thumbnail });
+            onSubmit({ ...productInfo, images, thumbnail });
           });
         }}
         className="space-y-6"
@@ -193,7 +193,7 @@ export default function ProductForm(props: Props) {
 
             <Input
               value={productInfo.mrp}
-              label="MRP"
+              label="MRP ($)"
               onChange={({ target }) => {
                 const mrp = +target.value;
                 setProductInfo({ ...productInfo, mrp });
@@ -203,7 +203,7 @@ export default function ProductForm(props: Props) {
             />
             <Input
               value={productInfo.salePrice}
-              label="Sale Price"
+              label="Sale Price ($)"
               onChange={({ target }) => {
                 const salePrice = +target.value;
                 setProductInfo({ ...productInfo, salePrice });
