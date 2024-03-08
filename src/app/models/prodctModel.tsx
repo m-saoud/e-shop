@@ -14,6 +14,7 @@ export interface NewProduct {
   quantity: number;
   category: string;
   rating: number;
+  sale: number;
 }
 
 interface ProductDocument extends NewProduct, Document {
@@ -52,6 +53,7 @@ if (existingModel) {
         base: { type: Number, required: true },
         discounted: { type: Number, required: true },
       },
+      sale: { type: Number },
       quantity: { type: Number, required: true },
       category: { type: String, enum: [...categories], required: true },
       rating: { type: Number, required: true },

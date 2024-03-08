@@ -1,8 +1,32 @@
-import Image from 'next/image'
+import Image from "next/image";
+import startDb from "../lib/db";
+import ProductModel from "../models/prodctModel";
+import GridView from "../components/GridView";
+import ProductCard from "../components/ProductCard";
 
-export default function Home() {
+const fetchLatestProducts = async () => {
+  await startDb();
+  const proudacts = ProductModel.find().sort("-createdAt").limit(20);
+  return (await proudacts).map((product) => {
+    return {
+      id: product._id.toString(),
+      title: product.title,
+      description: product.description,
+      category: product.category,
+      thumbnail: product.thumbnail.url,
+      price: product.price,
+      sale:product.sale
+    };
+  });
+};
+export default async function Home() {
+  const latestProduct = await fetchLatestProducts();
   return (
-    
-    <div><h1 className='fontSize-60'>Welcome my home page</h1></div>
-  )
+    <GridView>
+      {latestProduct.map((product) => {
+        // eslint-disable-next-line react/jsx-key
+        return <ProductCard product={product} />;
+      })}
+    </GridView>
+  );
 }
