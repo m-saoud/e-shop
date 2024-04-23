@@ -13,7 +13,7 @@ export default function Create() {
     const { thumbnail, images } = values;
     try {
       await newProductInfoSchema.validate(values, { abortEarly: false });
-      const thubmailRes = await upLoadImage(thumbnail!);
+      const thumbnailRes = await upLoadImage(thumbnail!);
       let productImages: { url: string; id: string }[] = [];
       if (images) {
         const uploadPromise = images.map(async (imageFile) => {
@@ -22,24 +22,26 @@ export default function Create() {
         });
         productImages = await Promise.all(uploadPromise);
       }
-      await createProduct({
-        ...values,
-        price: {
-          base: values.mrp,
-          discounted: values.salePrice,
-        },
-        thumbnail: thubmailRes,
-        images: productImages,
-        rating: 0,
-      });
+      // await createProduct({
+      //   ...values,
+      //   price: {
+      //     base: values.mrp,
+      //     discounted: values.salePrice,
+      //   },
+      //   thumbnail: thumbnailRes,
+      //   images: productImages,
+      //   rating: 0,
+      //   sale: 0,
+      // });
     } catch (error) {
       if (error instanceof ValidationError) {
-        error.inner.map((err) => {
+        error.inner.forEach((err) => { // Changed map to forEach for side effects like toast notifications
           toast.error(err.message);
         });
       }
     }
   };
+
   return (
     <div>
       <ProductForm onSubmit={handleCreateProduct} />
